@@ -9,8 +9,13 @@ class ShopController extends Controller
 {
     public function store(Request $request)
     {
-        $filename = $request->file('photo')->getClientOriginalName();
-        $request->file('photo')->storeAs('shops', $filename);
+        $file = $request->file('photo');
+        $filename = $file->getClientOriginalName();
+        $file->storeAs('shops', $filename);
+
+        Image::make($file)
+        ->resize(500, 500)
+        ->save(storage_path("app/shops/resized-{$filename}"));
 
         // TASK: resize the uploaded image from /storage/app/shops/$filename
         //   to size of 500x500 and store it as /storage/app/shops/resized-$filename
